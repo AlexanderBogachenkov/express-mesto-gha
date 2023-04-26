@@ -16,7 +16,6 @@
       "none"
     ],
     "no-console": "off",
-    // "eol-last": ["error", "never"],
     "quotes": [
       2,
       "double",
