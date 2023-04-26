@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
       required: [true, "не передана ссылка на аватар пользователя"],
     },
   },
-  { versionKey: false } // отключаем поле "__v"
+  { versionKey: false }, // отключаем поле "__v"
 );
 
 // создаём модель и экспортируем её
