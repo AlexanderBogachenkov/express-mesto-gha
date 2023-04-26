@@ -1,5 +1,4 @@
-const { DocumentNotFoundError, CastError, ValidationError } =
-  require("mongoose").Error;
+const { DocumentNotFoundError, CastError, ValidationError } = require("mongoose").Error;
 
 const User = require("../models/user");
 
@@ -84,7 +83,7 @@ const updateUserData = (req, res, updateOptions) => {
     {
       new: true, // обработчик then получит на вход обновлённую запись
       runValidators: true, // данные будут валидированы перед изменением
-    }
+    },
   )
     .orFail()
     .then((user) => res.send(user))
