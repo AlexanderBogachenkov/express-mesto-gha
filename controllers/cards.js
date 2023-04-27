@@ -9,7 +9,7 @@ const {
   INTERNAL_SERVER_ERROR_CODE,
 } = require("../utils/constants");
 
-// Функция, которая возвращает все карточки
+// Функция возвращает все карточки
 const getCards = (req, res) => {
   Card.find({})
     .populate(["owner", "likes"])
@@ -21,7 +21,7 @@ const getCards = (req, res) => {
     });
 };
 
-// Функция, которая создаёт карточку
+// Функция создаёт карточку
 const createCard = (req, res) => {
   const { name, link } = req.body;
   const { _id: userId } = req.user;
@@ -47,7 +47,7 @@ const createCard = (req, res) => {
     });
 };
 
-// Функция, которая удаляет карточку по идентификатору
+// Функция удаляет карточку по идентификатору
 const deleteCardById = (req, res) => {
   const { cardId } = req.params;
   Card.findByIdAndRemove(cardId)
@@ -100,16 +100,15 @@ const changeLikeCardStatus = (req, res, likeOtpions) => {
 
 // Функция-декоратор постановки лайка карточки
 const likeCard = (req, res) => {
-  const { _id: userId } = req.user;
-  // добавить _id пользователя в массив, если его там нет
-  const likeOptions = { $addToSet: { likes: userId } };
+  // добавить _id в массив, если его там нет
+  const likeOptions = { $addToSet: { likes: req.user._id } };
   changeLikeCardStatus(req, res, likeOptions);
 };
 
 // Функция-декоратор снятия лайка карточки
 const dislikeCard = (req, res) => {
-  const { _id: userId } = req.user;
-  const likeOptions = { $pull: { likes: userId } }; // убрать _id пользователя из массива
+  const likeOptions = { $pull: { likes: req.user._id } };
+  // убрать _id из массива
   changeLikeCardStatus(req, res, likeOptions);
 };
 
