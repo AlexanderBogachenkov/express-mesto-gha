@@ -9,7 +9,6 @@ const {
   INTERNAL_SERVER_ERROR_CODE,
 } = require("../utils/constants");
 
-// Функция, которая возвращает всех пользователей
 const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send(users))
@@ -20,7 +19,6 @@ const getUsers = (req, res) => {
     });
 };
 
-// Функция, которая возвращает пользователя по _id
 const getUserById = (req, res) => {
   console.log(req.params);
   const { userId } = req.params;
@@ -49,14 +47,13 @@ const getUserById = (req, res) => {
     });
 };
 
-// Функция, которая создаёт пользователя
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
 
   User.create({ name, about, avatar })
-    // вернём записанные в базу данные
+
     .then((user) => res.status(CREATED_CODE).send(user))
-    // данные не записались, вернём ошибку
+
     .catch((err) => {
       if (err instanceof ValidationError) {
         const errorMessage = Object.values(err.errors)
@@ -73,16 +70,15 @@ const createUser = (req, res) => {
     });
 };
 
-// Функция-декоратор, которая обновляет данные пользователя
 const updateUserData = (req, res, updateOptions) => {
   const { _id: userId } = req.user;
-  // обновим имя найденного по _id пользователя
+
   User.findByIdAndUpdate(
     userId,
-    updateOptions, // Передадим объект опций:
+    updateOptions,
     {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
+      new: true,
+      runValidators: true,
     },
   )
     .orFail()
@@ -115,13 +111,11 @@ const updateUserData = (req, res, updateOptions) => {
     });
 };
 
-// Функция-декоратор, которая обновляет профиль пользователя
 const updateProfile = (req, res) => {
   const updateOptions = req.body;
   updateUserData(req, res, updateOptions);
 };
 
-// Функция-декоратор, которая обновляет аватар пользователя
 const updateAvatar = (req, res) => {
   const updateOptions = req.body;
   updateUserData(req, res, updateOptions);
@@ -134,77 +128,3 @@ module.exports = {
   updateProfile,
   updateAvatar,
 };
-
-// const { users } = require("../data");
-// const User = require("../models/users");
-
-// const getUsers = (req, res) => {
-//   User.find()
-//     .then((users) => {
-//       res.send({ data: users });
-//     })
-//     .catch((e) => {
-//       res.status(500).send({ message: "Something went wrong" });
-//     });
-// };
-
-// const getUser = (req, res) => {
-//   const { id } = req.params;
-//   // const user = users.find((user) => user.id === Number(id));
-
-//   User.findById(id)
-//     .orFail(() => {
-//       // res.status(404).send({ message: "User not found" });
-//       throw new Error("Not found");
-//     })
-//     .then((user) => {
-//       res.send({ data: user });
-//     })
-//     .catch((e) => {
-//       if (e.message === "Not found") {
-//         res.status(404).send({ message: "User not found" });
-//       } else {
-//         res.status(500).send({ message: "Something went wrong" });
-//       }
-//     });
-// };
-
-// if (user) {
-//   res.send({ data: user });
-// } else {
-//   res.status(404).send({ message: "user not found" });
-// }
-
-// const createUser = (req, res) => {
-//   const { name, age } = req.body;
-//   console.log("req.body => ", req.body);
-
-//   User.create({ name, age })
-//     .then((user) => {
-//       res.status(201).send({ data: user });
-//     })
-//     .catch((e) => {
-//       console.log("e =>", e.errors);
-//       if (e.message === "ValidationError") {
-//         res.status(400).send({ message: "Поля неверно заполнены" });
-//       } else {
-//         res.status(500).send({ message: "Something went wrong" });
-//       }
-//     });
-
-// const user = {
-//   id: Math.floor(Math.random() * 1000 + 1),
-//   name,
-//   age,
-// };
-
-// users.push(user);
-
-// res.status(201).send({ data: user });
-// };
-
-// module.exports = {
-//   getUsers,
-//   getUser,
-//   createUser,
-// };
