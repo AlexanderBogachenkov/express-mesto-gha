@@ -52,7 +52,7 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
   },
-  { versionKey: false },
+  { versionKey: false }, // отключаем поле "__v"
 );
 
 // eslint-disable-next-line func-names

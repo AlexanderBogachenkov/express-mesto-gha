@@ -39,7 +39,6 @@ const getUsers = (req, res, next) => {
 };
 
 const getUserById = (req, res, next) => {
-  // console.log(req.params);
   const { userId } = req.params;
 
   User.findById(userId)
@@ -61,7 +60,6 @@ const getUserById = (req, res, next) => {
 };
 
 const createUser = (req, res, next) => {
-  // console.log(req.body);
   // eslint-disable-next-line object-curly-newline
   const { name, about, avatar, email, password } = req.body;
 
