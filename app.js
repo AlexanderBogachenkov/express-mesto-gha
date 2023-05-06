@@ -1,7 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const helmet = require("helmet");
+const { errors, celebrate, Joi } = require("celebrate");
 
 const mongoose = require("mongoose");
+const { createUser, login } = require("./controllers/users");
+const NotFoundError = require("./utils/NotFoundError");
+const errorsHandler = require("./middlewares/errors");
+const auth = require("./middlewares/auth");
 
 const router = require("./routes/index");
 
@@ -12,18 +18,40 @@ mongoose.connect("mongodb://127.0.0.1:27017/mestodb", {
   useNewUrlParser: true,
 });
 
+app.use(helmet());
+app.disable("x-powered-by");
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: "644957597ce875518ac3f777", // вставьте сюда _id
-  };
-
-  next();
-});
-
 app.use(router);
+
+app.post("/signin", celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+  }),
+}), login);
+
+app.post("/signup", celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required(),
+    name: Joi.string().min(2).max(30),
+    avatar: Joi.string().regex(/^https?:\/\/(www.)?([\da-z-]+\.)+\/?\S*/im),
+    about: Joi.string().min(2).max(30),
+  }),
+}), createUser);
+
+// роуты, которым авторизация нужна
+app.use("/cards", auth, require("./routes/cards"));
+app.use("/users", auth, require("./routes/users"));
+
+app.use("/*", () => {
+  throw new NotFoundError("Страница  по этому адресу не найдена");
+});
+app.use(errors());
+app.use(errorsHandler);
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает

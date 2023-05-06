@@ -1,9 +1,10 @@
 [![Tests](../../actions/workflows/tests-13-sprint.yml/badge.svg)](../../actions/workflows/tests-13-sprint.yml) [![Tests](../../actions/workflows/tests-14-sprint.yml/badge.svg)](../../actions/workflows/tests-14-sprint.yml)
 
 # Яндекс.Практикум. Веб разработка. 
-# Спринт №13. 
+# Спринт №14. 
 
-# Проект Mesto фронтенд + бэкенд
+# Проект Mesto фронтенд + бэкенд. 
+# Регистрация и авторизация на бэкенде
 
 ## Директории
 

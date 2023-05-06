@@ -15,6 +15,7 @@
       "error",
       "none"
     ],
+    "linebreak-style": 0,
     "no-console": "off",
     "quotes": [
       2,
