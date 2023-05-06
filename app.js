@@ -9,7 +9,9 @@ const NotFoundError = require("./utils/NotFoundError");
 const errorsHandler = require("./middlewares/errors");
 const auth = require("./middlewares/auth");
 
-const router = require("./routes/index");
+// const router = require("./routes/index");
+const userRoute = require("./routes/users");
+const cardRoute = require("./routes/cards");
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -24,7 +26,7 @@ app.disable("x-powered-by");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(router);
+// app.use(router);
 
 app.post("/signin", celebrate({
   body: Joi.object().keys({
@@ -44,8 +46,8 @@ app.post("/signup", celebrate({
 }), createUser);
 
 // роуты, которым авторизация нужна
-app.use("/cards", auth, require("./routes/cards"));
-app.use("/users", auth, require("./routes/users"));
+app.use("/users", auth, userRoute);
+app.use("/cards", auth, cardRoute);
 
 app.use("/*", () => {
   throw new NotFoundError("Страница  по этому адресу не найдена");
