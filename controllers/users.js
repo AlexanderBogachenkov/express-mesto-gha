@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { CastError } = require('mongoose').Error;
 
 const NotFoundError = require("../utils/NotFoundError");
 const BadRequestError = require("../utils/BadRequestError");
@@ -51,10 +52,10 @@ const getUserById = (req, res, next) => {
       }
     })
     .catch((error) => {
-      if (error.name === "CastError") {
+      if (error instanceof CastError) {
         next(new BadRequestError("Передан некорректный ID пользователя"));
       } else {
-        next();
+        next(error);
       }
     });
 };
