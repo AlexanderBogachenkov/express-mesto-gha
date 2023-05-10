@@ -9,7 +9,7 @@ const { createUser, login } = require("./controllers/users");
 const errorsHandler = require("./middlewares/errors");
 const auth = require("./middlewares/auth");
 
-const MY_REGEX_HTML = require("./utils/constants");
+// const MY_REGEX_HTML = require("./utils/constants");
 
 // const router = require("./routes/index");
 const userRoute = require("./routes/users");
@@ -45,8 +45,8 @@ app.post("/signup", celebrate({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
     name: Joi.string().min(2).max(30),
-    // avatar: Joi.string().regex(/^https?:\/\/(www.)?([\da-z-]+\.)+\/?\S*/im),
-    avatar: Joi.string().regex(MY_REGEX_HTML),
+    avatar: Joi.string().regex(/^https?:\/\/(www.)?([\da-z-]+\.)+\/?\S*/im),
+    // avatar: Joi.string().regex(MY_REGEX_HTML),
     about: Joi.string().min(2).max(30),
   }),
 }), createUser);

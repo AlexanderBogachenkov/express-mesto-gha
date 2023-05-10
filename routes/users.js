@@ -4,7 +4,7 @@ const {
   getUsers, getUserById, getMe, updateProfile, updateAvatar,
 } = require("../controllers/users");
 
-const MY_REGEX_HTML = require("../utils/constants");
+// const MY_REGEX_HTML = require("../utils/constants");
 
 router.get("/", getUsers);
 router.get("/me", getMe);
@@ -21,8 +21,8 @@ router.patch("/me", celebrate({
 }), updateProfile);
 router.patch("/me/avatar", celebrate({
   body: Joi.object().keys({
-    // avatar: Joi.string().required().regex(/^https?:\/\/(www.)?([\da-z-]+\.)+\/?\S*/im),
-    avatar: Joi.string().required().regex(MY_REGEX_HTML),
+    avatar: Joi.string().required().regex(/^https?:\/\/(www.)?([\da-z-]+\.)+\/?\S*/im),
+    // avatar: Joi.string().required().regex(MY_REGEX_HTML),
   }),
 }), updateAvatar);
 
