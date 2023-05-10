@@ -54,7 +54,7 @@ const getUserById = (req, res, next) => {
       if (error.name === "CastError") {
         next(new BadRequestError("Передан некорректный ID пользователя"));
       } else {
-        next();
+        next(error);
       }
     });
 };
@@ -86,7 +86,7 @@ const createUser = (req, res, next) => {
       ) {
         next(new ConflictingRequestError("Такой пользователь уже зарегистрирован"));
       } else {
-        next();
+        next(error);
       }
     });
 };
@@ -106,7 +106,7 @@ const updateProfile = (req, res, next) => {
       if (error.name === "ValidationError") {
         next(new BadRequestError("Переданы некорректные данные при редактировании профиля пользователя"));
       } else {
-        next();
+        next(error);
       }
     });
 };
@@ -125,7 +125,7 @@ const updateAvatar = (req, res, next) => {
       if (error.name === "ValidationError" || error.name === "CastError") {
         next(new BadRequestError("Переданы некорректные данные при редактировании профиля аватара"));
       } else {
-        next();
+        next(error);
       }
     });
 };

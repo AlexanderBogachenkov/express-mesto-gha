@@ -57,6 +57,9 @@ const deleteCardById = (req, res, next) => {
         Card.findByIdAndRemove(cardId)
           .then((deleted) => {
             res.status(200).send({ data: deleted });
+          })
+          .catch((error) => {
+            next(error);
           });
       } else {
         next(new ForbiddenError("Вы пытаетесь удалить чужую карточку"));
