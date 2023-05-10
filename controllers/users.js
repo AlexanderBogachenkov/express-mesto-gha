@@ -1,6 +1,6 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { CastError } = require('mongoose').Error;
+const { CastError } = require("mongoose").Error;
 
 const NotFoundError = require("../utils/NotFoundError");
 const BadRequestError = require("../utils/BadRequestError");
@@ -39,23 +39,22 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
+// Функция, которая возвращает пользователя по _id
 const getUserById = (req, res, next) => {
   const { userId } = req.params;
 
   User.findById(userId)
-    .orFail()
     .then((user) => {
       if (!user) {
-        next(new NotFoundError("Пользователь по указанному _id не найден"));
-      } else {
-        res.send({ data: user });
+        throw new NotFoundError("Пользователь по указанному _id не найден");
       }
+      res.send(user);
     })
-    .catch((error) => {
-      if (error instanceof CastError) {
+    .catch((err) => {
+      if (err instanceof CastError) {
         next(new BadRequestError("Передан некорректный ID пользователя"));
       } else {
-        next(error);
+        next(err);
       }
     });
 };
