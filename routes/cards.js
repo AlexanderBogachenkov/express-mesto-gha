@@ -4,7 +4,6 @@ const { celebrate, Joi } = require("celebrate");
 const {
   getCards, deleteCardById, createCard, likeCard, dislikeCard,
 } = require("../controllers/cards");
-// const MY_REGEX_HTML = require("../utils/constants");
 
 router.get("/", getCards);
 router.delete("/:cardId", celebrate({
@@ -16,7 +15,6 @@ router.post("/", celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     link: Joi.string().required().regex(/^https?:\/\/(www.)?([\da-z-]+\.)+\/?\S*/im),
-    // link: Joi.string().required().regex(MY_REGEX_HTML),
   }),
 }), createCard);
 router.put("/:cardId/likes", celebrate({

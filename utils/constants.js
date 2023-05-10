@@ -3,12 +3,9 @@ const BAD_REQUEST_ERROR_CODE = 400;
 const NOT_FOUND_ERROR_CODE = 404;
 const INTERNAL_SERVER_ERROR_CODE = 500;
 
-const MY_REGEX_HTML = "/^https?:\\/\\/(www.)?([\\da-z-]+\\.)+\\/?\\S*/im";
-
 module.exports = {
   CREATED_CODE,
   BAD_REQUEST_ERROR_CODE,
   NOT_FOUND_ERROR_CODE,
   INTERNAL_SERVER_ERROR_CODE,
-  MY_REGEX_HTML,
 };
