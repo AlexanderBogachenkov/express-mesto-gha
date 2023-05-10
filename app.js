@@ -51,7 +51,7 @@ app.use("/users", auth, userRoute);
 app.use("/cards", auth, cardRoute);
 
 // роут для запросов по несуществующим URL
-router.use("*", auth, (req, res, next) => {
+router.use("/*", auth, (req, res, next) => {
   next(new NotFoundError("Запрашиваемый URL не существует"));
 });
 
