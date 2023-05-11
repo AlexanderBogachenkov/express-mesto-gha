@@ -1,6 +1,6 @@
 const express = require("express");
 const router = require("express").Router();
-const bodyParser = require("body-parser");
+// const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const { errors, celebrate, Joi } = require("celebrate");
 
@@ -13,6 +13,7 @@ const auth = require("./middlewares/auth");
 // const router = require("./routes/index");
 const userRoute = require("./routes/users");
 const cardRoute = require("./routes/cards");
+const { regEx } = require("./utils/constants");
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -24,8 +25,9 @@ mongoose.connect("mongodb://127.0.0.1:27017/mestodb", {
 app.use(helmet());
 app.disable("x-powered-by");
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+express.json();
 
 app.use(router);
 
@@ -41,7 +43,8 @@ app.post("/signup", celebrate({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
     name: Joi.string().min(2).max(30),
-    avatar: Joi.string().regex(/^https?:\/\/(www.)?([\da-z-]+\.)+\/?\S*/im),
+    // avatar: Joi.string().regex(/^https?:\/\/(www.)?([\da-z-]+\.)+\/?\S*/im),
+    avatar: Joi.string().regex(regEx),
     about: Joi.string().min(2).max(30),
   }),
 }), createUser);
@@ -50,9 +53,14 @@ app.post("/signup", celebrate({
 app.use("/users", auth, userRoute);
 app.use("/cards", auth, cardRoute);
 
-app.use("/*", () => {
-  throw new NotFoundError("Страница  по этому адресу не найдена");
+// app.use("/*", () => {
+//   throw new NotFoundError("Страница  по этому адресу не найдена");
+// });
+
+app.use("*", auth, (req, res, next) => {
+  next(new NotFoundError("Запрашиваемый URL не существует"));
 });
+
 app.use(errors());
 app.use(errorsHandler);
 
