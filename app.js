@@ -1,5 +1,5 @@
 const express = require("express");
-const router = require("express").Router(); // импортируем роутер из express
+const router = require("express").Router();
 const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const { errors, celebrate, Joi } = require("celebrate");
@@ -24,11 +24,10 @@ mongoose.connect("mongodb://127.0.0.1:27017/mestodb", {
 app.use(helmet());
 app.disable("x-powered-by");
 
-// express.json();
-app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-// app.use(router);
+app.use(router);
 
 app.post("/signin", celebrate({
   body: Joi.object().keys({
@@ -51,11 +50,9 @@ app.post("/signup", celebrate({
 app.use("/users", auth, userRoute);
 app.use("/cards", auth, cardRoute);
 
-// роут для запросов по несуществующим URL
-router.use("/*", () => {
-  throw new NotFoundError("Запрашиваемый URL не существует");
+app.use("/*", () => {
+  throw new NotFoundError("Страница  по этому адресу не найдена");
 });
-
 app.use(errors());
 app.use(errorsHandler);
 
