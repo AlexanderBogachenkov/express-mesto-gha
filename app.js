@@ -27,7 +27,7 @@ app.disable("x-powered-by");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// express.json();
+// express.json(); // не проходит тесты
 
 app.use(router);
 
@@ -53,13 +53,13 @@ app.post("/signup", celebrate({
 app.use("/users", auth, userRoute);
 app.use("/cards", auth, cardRoute);
 
-app.use("/*", () => {
-  throw new NotFoundError("Страница  по этому адресу не найдена");
-});
-
-// router.use("*", auth, (req, res, next) => {
-//   next(new NotFoundError("Запрашиваемый URL не существует"));
+// app.use("/*", () => {
+//   throw new NotFoundError("Страница  по этому адресу не найдена");
 // });
+
+router.use("*", auth, (req, res, next) => {
+  next(new NotFoundError("Запрашиваемый URL не существует"));
+});
 
 app.use(errors());
 app.use(errorsHandler);
