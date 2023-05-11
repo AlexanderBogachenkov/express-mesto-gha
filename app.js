@@ -16,6 +16,8 @@ const cardRoute = require("./routes/cards");
 const { regEx } = require("./utils/constants");
 
 const { PORT = 3000 } = process.env;
+const { requestLogger, errorLogger } = require("./middlewares/logger");
+
 const app = express();
 
 mongoose.connect("mongodb://127.0.0.1:27017/mestodb", {
@@ -30,6 +32,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // express.json(); // не проходит тесты
 
 app.use(router);
+
+app.use(requestLogger); // подключаем логгер запросов
 
 app.post("/signin", celebrate({
   body: Joi.object().keys({
@@ -53,6 +57,11 @@ app.post("/signup", celebrate({
 app.use("/users", auth, userRoute);
 app.use("/cards", auth, cardRoute);
 
+app.use(errorLogger); // подключаем логгер ошибок
+
+app.use(errors());
+app.use(errorsHandler);
+
 // app.use("/*", () => {
 //   throw new NotFoundError("Страница по этому адресу не найдена");
 // });
@@ -60,9 +69,6 @@ app.use("/cards", auth, cardRoute);
 app.use("*", auth, (req, res, next) => {
   next(new NotFoundError("Страница по этому адресу не найдена"));
 });
-
-app.use(errors());
-app.use(errorsHandler);
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
