@@ -15,7 +15,8 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, "some-secret-key");
   } catch (err) {
-    throw new UnauthorizedError("Переданы неверные данные");
+    // throw new UnauthorizedError("Переданы неверные данные");
+    next(new UnauthorizedError("Переданы неверные данные"));
   }
 
   req.user = payload; // записываем пейлоуд в объект запроса
