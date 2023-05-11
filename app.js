@@ -54,11 +54,11 @@ app.use("/users", auth, userRoute);
 app.use("/cards", auth, cardRoute);
 
 // app.use("/*", () => {
-//   throw new NotFoundError("Страница  по этому адресу не найдена");
+//   throw new NotFoundError("Страница по этому адресу не найдена");
 // });
 
 app.use("*", auth, (req, res, next) => {
-  next(new NotFoundError("Запрашиваемый URL не существует"));
+  next(new NotFoundError("Страница по этому адресу не найдена"));
 });
 
 app.use(errors());
