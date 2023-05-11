@@ -57,7 +57,7 @@ app.use("/cards", auth, cardRoute);
 //   throw new NotFoundError("Страница  по этому адресу не найдена");
 // });
 
-router.use("*", auth, (req, res, next) => {
+app.use("*", auth, (req, res, next) => {
   next(new NotFoundError("Запрашиваемый URL не существует"));
 });
 
