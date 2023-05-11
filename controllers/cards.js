@@ -49,23 +49,27 @@ const createCard = (req, res, next) => {
 // Функция удаляет карточку по идентификатору
 const deleteCardById = (req, res, next) => {
   const { cardId } = req.params;
-  const { _id: userId } = req.user;
-  Card.findById(cardId)
-    .then((card) => {
-      if (!card) {
-        throw new NotFoundError("Карточка с указанным _id не найдена");
-      }
-      if (userId !== card.owner.toString()) {
-        throw new ForbiddenError("К сожалению, Вы не можете удалить эту карточку");
-      }
-      return Card.findByIdAndRemove(cardId)
-        .then(() => res.send({ message: "Пост удалён" }));
-    })
-    .catch((err) => {
-      if (err instanceof CastError) {
-        next(new BadRequestError("Передан некорректный ID карточки"));
+  Card.findById(cardId).then((card) => {
+    if (card) {
+      const ownerId = card.owner.toString();
+      const userId = req.user._id;
+      if (ownerId === userId) {
+        Card.findByIdAndRemove(cardId)
+          .then((deleted) => {
+            res.status(200).send({ data: deleted });
+          });
       } else {
-        next(err);
+        next(new ForbiddenError("Вы пытаетесь удалить чужую карточку"));
+      }
+    } else {
+      next(new NotFoundError("Карточка с таким идентификатором не найдена"));
+    }
+  })
+    .catch((error) => {
+      if (error.name === "CastError") {
+        next(new BadRequestError("Карточка с таким идентификатором не найдена"));
+      } else {
+        next(error);
       }
     });
 };

@@ -1,6 +1,5 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { CastError } = require("mongoose").Error;
 
 const NotFoundError = require("../utils/NotFoundError");
 const BadRequestError = require("../utils/BadRequestError");
@@ -39,22 +38,23 @@ const getUsers = (req, res, next) => {
     .catch(next);
 };
 
-// Функция, которая возвращает пользователя по _id
 const getUserById = (req, res, next) => {
   const { userId } = req.params;
 
   User.findById(userId)
+    .orFail()
     .then((user) => {
       if (!user) {
         next(new NotFoundError("Пользователь по указанному _id не найден"));
+      } else {
+        res.send({ data: user });
       }
-      res.send(user);
     })
-    .catch((err) => {
-      if (err instanceof CastError) {
+    .catch((error) => {
+      if (error.name === "CastError") {
         next(new BadRequestError("Передан некорректный ID пользователя"));
       } else {
-        next(err);
+        next();
       }
     });
 };
@@ -86,7 +86,7 @@ const createUser = (req, res, next) => {
       ) {
         next(new ConflictingRequestError("Такой пользователь уже зарегистрирован"));
       } else {
-        next(error);
+        next();
       }
     });
 };
@@ -106,7 +106,7 @@ const updateProfile = (req, res, next) => {
       if (error.name === "ValidationError") {
         next(new BadRequestError("Переданы некорректные данные при редактировании профиля пользователя"));
       } else {
-        next(error);
+        next();
       }
     });
 };
@@ -125,7 +125,7 @@ const updateAvatar = (req, res, next) => {
       if (error.name === "ValidationError" || error.name === "CastError") {
         next(new BadRequestError("Переданы некорректные данные при редактировании профиля аватара"));
       } else {
-        next(error);
+        next();
       }
     });
 };
