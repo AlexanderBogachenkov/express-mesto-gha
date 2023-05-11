@@ -1,6 +1,6 @@
 const express = require("express");
 const router = require("express").Router();
-// const bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 const helmet = require("helmet");
 const { errors, celebrate, Joi } = require("celebrate");
 
@@ -25,9 +25,9 @@ mongoose.connect("mongodb://127.0.0.1:27017/mestodb", {
 app.use(helmet());
 app.disable("x-powered-by");
 
-// app.use(bodyParser.json());
-// app.use(bodyParser.urlencoded({ extended: true }));
-express.json();
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+// express.json();
 
 app.use(router);
 
